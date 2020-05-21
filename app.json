@@ -1,0 +1,36 @@
+{
+  "pages":[
+    "pages/login/login",
+    "pages/binding/binding",
+    "pages/my/my",
+    "pages/_home/_home",
+    "pages/tomato/tomato",
+    "pages/index/index",
+    "pages/home/home",
+    "pages/logs/logs"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "番茄闹钟",
+    "navigationBarTextStyle":"black"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#000000",
+    "selectedColor": "#000000",
+    "backgroundColor": "#000000",
+    "list": [{
+      "pagePath": "pages/_home/_home",
+      "text": "专注"
+    }, {
+      "pagePath": "pages/home/home",
+      "text": "数据统计"
+    },{
+      "pagePath": "pages/my/my",
+      "text": "我的"
+    } ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
