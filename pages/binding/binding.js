@@ -1,4 +1,7 @@
-// pages/binding/binding.js
+const {
+  http
+} = require("../../lib/http")
+
 Page({
 
   /**
@@ -6,7 +9,7 @@ Page({
    */
   data: {
     account: '',
-    password: ''
+    password_digest: ''
   },
 
   /**
@@ -29,8 +32,26 @@ Page({
   onShow: function () {
 
   },
-  watchAccount(){},
-  watchPassword(){},
+  watchAccount(event) {
+    this.setData({
+      account: event.detail.value
+    })
+  },
+  watchPassword() {
+    this.setData({
+      password_digest: event.detail.value
+    })
+  },
+  submit() {
+    http.post("/bindings", {
+      account: this.data.account,
+      password_digest: this.data.password_digest
+    }).then(response => {
+      console.log(response);
+      wx.setStorageSync('my', response.data.resource)
+      wx.reLaunch({ url: "/pages/home/home" })
+    })
+  },
   /**
    * 生命周期函数--监听页面隐藏
    */

@@ -54,12 +54,14 @@ Page({
       app_id,
       app_secret
     }).then(response => {
-      console.log(response);
-      wx.setStorageSync('my', response.data.resource)
-      wx.setStorageSync('X-token', response.header["X-token"])
+      this.saveMessage(response)
       wx.reLaunch({
         url: '/pages/_home/_home',
       })
     })
+  },
+  saveMessage(response) {
+    wx.setStorageSync('my', response.data.resource)
+    wx.setStorageSync('X-token', response.header["X-token"])
   }
 })

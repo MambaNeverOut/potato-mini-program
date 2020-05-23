@@ -35,12 +35,12 @@
   width: 100%;
   position: relative;
 }
-.actions > .action {
+.actions > view {
   width: 50%;
   text-align: center;
   height: 66rpx;
 }
-.actions > .action.active { 
+.actions > view.active { 
   opacity: 0.5;
 }
 .actions .sure { 

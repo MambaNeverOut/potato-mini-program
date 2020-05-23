@@ -1,26 +1,31 @@
-// pages/tomato/tomato.js
+const { http } = require("../../lib/http")
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    defaultSecond: 5,
+    defaultSecond: 1500,
     time: '',
     timer: null,
     timerStatus: 'start',
     confirmVisible: false,
     againButtonVisible: false,
-    finishConfirmVisible: false
+    finishConfirmVisible: false,
+    tomato: {}
   },
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
     this.startTimer()
+    http.post('/tomatoes').then(response => {
+      this.setData({ tomato: response.data.resource})
+    })
   },
   againTimer() {
-    this.data.defaultSecond = 5
+    this.data.defaultSecond = 1500
     this.setData({
       againButtonVisible: false
     })
@@ -32,6 +37,8 @@ Page({
     })
     this.changeTime()
     this.timer = setInterval(() => {
+      this.data.defaultSecond = this.data.defaultSecond - 1
+      this.changeTime()
       if (this.data.defaultSecond <= 0) {
         this.setData({
           againButtonVisible: true
@@ -41,8 +48,6 @@ Page({
         })
         return this.clearTimer()
       }
-      this.data.defaultSecond = this.data.defaultSecond - 1
-      this.changeTime()
     }, 1000)
   },
   clearTimer() {
@@ -70,7 +75,14 @@ Page({
   },
   confirmAbandon(event) {
     let content = event.detail
-    wx.navigateBack(-1)
+    http.put(`/tomatoes/${this.data.tomato.id}`, {
+      description: content, aborted: true
+    }).then( response => {
+      // wx.switchTab({
+      //   url: 'pages/_home/_home',
+      // })
+      wx.navigateBack({to:-1})
+    })
   },
   showConfirm() {
     this.clearTimer()
@@ -86,6 +98,15 @@ Page({
   },
   confirmFinish(event) {
     let content = event.detail
+    http.put(`/tomatoes/${this.data.tomato.id}`,{
+      description: content,
+      aborted: false
+    }).then( response => {
+      this.setData({
+        finishConfirmVisible: false,
+      })
+      wx.navigateBack({to:-1})
+    })
   },
   confirmCancel() {
     this.setData({
@@ -96,34 +117,23 @@ Page({
    * 生命周期函数--监听页面隐藏
    */
   onHide: function () {
-
+    this.clearTimer()
+    http.put(`/tomatoes/${this.data.tomato.id}`, {
+      description: "退出放弃", aborted: true
+    }).then( response => {
+      wx.navigateBack({to: -1})
+    })
   },
 
   /**
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+    this.clearTimer()
+    http.put(`/tomatoes/${this.data.tomato.id}`, {
+      description: "退出放弃", aborted: true
+    }).then( response => {
+      wx.navigateBack({to: -1})
+    })
   }
 })
